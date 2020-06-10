@@ -290,39 +290,6 @@ def test_TupleS3StoreBackend_with_empty_prefixes():
         == "https://s3.amazonaws.com/leakybucket/my_file_BBB"
     )
 
-@mock_s3
-def test_TupleS3StoreBackend_get_non_existent_object_key():
-    """
-        What does this test test and why?
-
-        When an S3 store is configured for expectations and validation results, and the directory is non-disjoint,
-
-        S3:/directory/validations/validation_result.json
-        S3:/directory/expectation_result.json
-
-        then Validation results are unable to be retrived (boto3 NoSuchKeyError)
-        This test tests that the NoSuchKeyError is caught and a SourceStoreKeyError is raised, with a more informative message to the user.
-
-    """
-
-    bucket = "mybucket"
-    validation_prefix = "/top_folder/validation"
-    expectations_prefix = "/top_folder/"
-    prefix = expectations_prefix
-
-    # create a bucket in Moto's mock AWS environment
-    conn = boto3.resource("s3", region_name="us-east-1")
-    conn.create_bucket(Bucket=bucket)
-
-    my_store = TupleS3StoreBackend(
-        filepath_template="my_file_{0}", bucket=bucket, prefix=prefix,
-    )
-
-    with pytest.raises(Exception) as e:
-        my_store.get(("BBB",))
-    assert e.value == "No SourceStoreKey found for /top_folder/my_file_BBB"
-
-
 def test_TupleGCSStoreBackend():
     pytest.importorskip("google-cloud-storage")
     """
