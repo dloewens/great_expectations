@@ -8,7 +8,7 @@ from abc import ABCMeta
 
 from great_expectations.data_context.store.store_backend import StoreBackend
 from great_expectations.exceptions import StoreBackendError
-from great_expectations.exceptions import MissingStoreKeyError
+from great_expectations.exceptions import SourceStoreKeyError
 
 
 logger = logging.getLogger(__name__)
@@ -376,15 +376,13 @@ class TupleS3StoreBackend(TupleStoreBackend):
     def _get(self, key):
 
         s3_object_key = os.path.join(self.prefix, self._convert_key_to_filepath(key))
-
         import boto3
         s3 = boto3.client("s3")
 
         try:
             s3_response_object = s3.get_object(Bucket=self.bucket, Key=s3_object_key)
         except s3.exceptions.NoSuchKey:
-            print(" CAUGHT ME !!")
-            raise MissingStoreKeyError("HI HI HI HI HI HI HI")
+            raise SourceStoreKeyError(str(s3_object_key))
 
         return (
             s3_response_object["Body"]
