@@ -8,6 +8,8 @@ from abc import ABCMeta
 
 from great_expectations.data_context.store.store_backend import StoreBackend
 from great_expectations.exceptions import StoreBackendError
+from great_expectations.exceptions import MissingStoreKeyError
+
 
 logger = logging.getLogger(__name__)
 
@@ -164,7 +166,6 @@ class TupleStoreBackend(StoreBackend, metaclass=ABCMeta):
         else:
             filepath = os.path.normpath(filepath)
             new_key = tuple(filepath.split(os.sep))
-
         return new_key
 
     def verify_that_key_to_filepath_operation_is_reversible(self):
@@ -373,12 +374,18 @@ class TupleS3StoreBackend(TupleStoreBackend):
         self.prefix = prefix
 
     def _get(self, key):
+
         s3_object_key = os.path.join(self.prefix, self._convert_key_to_filepath(key))
 
         import boto3
-
         s3 = boto3.client("s3")
-        s3_response_object = s3.get_object(Bucket=self.bucket, Key=s3_object_key)
+
+        try:
+            s3_response_object = s3.get_object(Bucket=self.bucket, Key=s3_object_key)
+        except s3.exceptions.NoSuchKey:
+            print(" CAUGHT ME !!")
+            raise MissingStoreKeyError("HI HI HI HI HI HI HI")
+
         return (
             s3_response_object["Body"]
             .read()
@@ -389,7 +396,6 @@ class TupleS3StoreBackend(TupleStoreBackend):
         self, key, value, content_encoding="utf-8", content_type="application/json"
     ):
         s3_object_key = os.path.join(self.prefix, self._convert_key_to_filepath(key))
-
         import boto3
 
         s3 = boto3.resource("s3")

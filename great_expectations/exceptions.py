@@ -243,6 +243,15 @@ class ExpectationSuiteNotFoundError(GreatExpectationsError):
         super().__init__(self.message)
 
 
+class MissingStoreKeyError(StoreBackendError):
+    def __init__(self, store_key):
+        self.store_key = store_key # do I add backend too?
+        self.message = (
+            "No store key found for %s " % store_key
+        )
+        super().__init__(self.message)
+
+
 class BatchKwargsError(DataContextError):
     def __init__(self, message, batch_kwargs=None):
         self.message = message
