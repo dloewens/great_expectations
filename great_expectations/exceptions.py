@@ -246,9 +246,7 @@ class ExpectationSuiteNotFoundError(GreatExpectationsError):
 class SourceStoreKeyError(StoreBackendError):
     def __init__(self, store_key):
         self.store_key = store_key
-        self.message = (
-            "No SourceStoreKey found for %s " % store_key
-        )
+        self.message = "No SourceStoreKey found for %s " % store_key
         super().__init__(self.message)
 
 

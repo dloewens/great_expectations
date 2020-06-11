@@ -291,6 +291,7 @@ def test_TupleS3StoreBackend_with_empty_prefixes():
         == "https://s3.amazonaws.com/leakybucket/my_file_BBB"
     )
 
+
 def test_TupleGCSStoreBackend():
     pytest.importorskip("google-cloud-storage")
     """

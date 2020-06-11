@@ -7,9 +7,7 @@ import shutil
 from abc import ABCMeta
 
 from great_expectations.data_context.store.store_backend import StoreBackend
-from great_expectations.exceptions import StoreBackendError
-from great_expectations.exceptions import SourceStoreKeyError
-
+from great_expectations.exceptions import SourceStoreKeyError, StoreBackendError
 
 logger = logging.getLogger(__name__)
 
@@ -377,6 +375,7 @@ class TupleS3StoreBackend(TupleStoreBackend):
 
         s3_object_key = os.path.join(self.prefix, self._convert_key_to_filepath(key))
         import boto3
+
         s3 = boto3.client("s3")
 
         try:

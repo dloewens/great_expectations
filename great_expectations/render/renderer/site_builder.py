@@ -394,8 +394,6 @@ class DefaultSiteSectionBuilder(object):
                 )
                 continue
 
-
-
             if isinstance(resource_key, ExpectationSuiteIdentifier):
                 expectation_suite_name = resource_key.expectation_suite_name
                 logger.debug(
