@@ -116,10 +116,11 @@ def test_TupleFilesystemStoreBackend(tmp_path_factory):
         base_directory=project_path,
         filepath_template="my_file_{0}",
     )
-
+    # MARKING THIS NOTE
     # OPPORTUNITY: potentially standardize error instead of allowing each StoreBackend to raise its own error types
     with pytest.raises(FileNotFoundError):
         my_store.get(("AAA",))
+    # REMOVE AFTER DISCUSSION
 
     my_store.set(("AAA",), "aaa")
     assert my_store.get(("AAA",)) == "aaa"
